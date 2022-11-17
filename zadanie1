@@ -1,0 +1,19 @@
+k = list()
+l = input("вол во ключей:")
+for i in range(int(l)):
+    n = input("ключ:")
+    k.append(str(n))
+print (k)
+z = list()
+l2 = input("вол во значений:")
+for i2 in range(int(l2)):
+    n2 = input("значение:")
+    z.append(str(n2))
+def f():
+    from itertools import zip_longest
+    print (z)
+    if (len(k)>len(z)):
+        print(dict(zip_longest(k, z, fillvalue='none')))
+    else:
+        print(dict(zip(k,z)))
+f()
