@@ -1,0 +1,27 @@
+class koshka():
+    def v():
+        kolvo = input("Количество котят: ")
+        m = list()
+        j = 0
+        d = 0
+        import random
+        for l in range(int(kolvo)):
+            k = random.randint(0,1)
+            if(k == 1):
+                m.append(str("dev"))
+            else:
+                m.append(str("mal"))
+        for i in m:
+            if (i == "mal"):
+                j+= 1
+        for i in m:
+            if (i == "dev"):
+                d += 1
+        d = str(d)
+        j = str(j)
+        print (m)
+        print ("всего котят:" + kolvo)
+        print ("Количество котят мальчиков: " + j)
+        print ("Количество котят девочек: " + d)
+    v()
+
