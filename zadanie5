@@ -1,0 +1,9 @@
+def g(m):
+    c = 0
+    for i in range(1, m+1):
+        for j in range(i):
+            c += 1
+            if c > m:
+                return
+            yield str(i)
+print(" ".join(g(int(input("максимальное количество чисел: ")))))
