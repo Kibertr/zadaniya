@@ -57,7 +57,39 @@ $cl = new database();
   <div class="my-3 p-3 bg-body rounded shadow-sm">
     <h6 class="border-bottom pb-2 mb-0">Гостевая книга</h6>
     <?php
-        $array = $cl->getdata();
+        $vsego = $cl->pagination();
+        $limit = 10;
+        if (isset($_GET['page'])){
+          $stranica = $_GET['page'];
+          }
+        else $stranica = 1;
+        $stranic = round($vsego/$limit);
+        $nachalo = $stranica * $limit - $limit;
+        echo '
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" href="?page='.$cl->minus($stranica).'" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>';
+        for ($i=1;$i<=$stranic;$i++){
+          if($_GET['page']==$i){
+            echo '<b><li class="page-item"><a class="page-link" href="?page='.$i.'">'.$i.'</a></li></b>';
+          }else{
+            echo '<li class="page-item"><a class="page-link" href="?page='.$i.'">'.$i.'</a></li>';
+        }
+        
+        }
+        echo '<li class="page-item">
+                <a class="page-link" href="?page='.$cl->plus($stranica,$stranic).'" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+          </ul>
+        </nav>';
+
+        $array = $cl->getdata($nachalo);
         foreach($array as $key=>$val){
               echo '<div class="d-flex text-body-secondary pt-3">';
               echo '<svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>';
