@@ -6,7 +6,7 @@ $cl = new database();
 <html lang="en" data-bs-theme="auto">
     <head>
         <script src="assets/js/color-modes.js"></script>
-
+        <script src="jquery-3.7.1.js"></script>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
@@ -44,26 +44,64 @@ $cl = new database();
         <input type="email" name="mail" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
       </div>
       <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Текст</label>
-        <input type="text" name="text" class="form-control" id="exampleInputPassword1">
+        <label for="text" class="form-label">Текст</label>
+        <textarea  name="text" class="form-control" id="text"></textarea>
       </div>
         <input type="hidden" name="date" value="<?php echo date('Y-m-d'); ?>">
         <input type="hidden" name="ip" value="<?php echo $_SERVER['REMOTE_ADDR'];?>">
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <script>
+      $("textarea").on('keyup', function (e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+          $('textarea').val($('textarea').val() + '<br>');
+        }
+      });
+    </script>
+    
 </div>
 </div>
+
+<?php
+// Получаем текущую страницу
+$current_page = basename($_SERVER['REQUEST_URI']);
+
+// Генерируем "хлебные крошки"
+echo '<nav aria-label="breadcrumb">';
+echo '<ol class="breadcrumb">';
+
+// Главный элемент
+echo '<li class="breadcrumb-item">';
+echo '<a href="index.php">Книга</a>';
+echo '</li>';
+
+// Промежуточные элементы
+echo '<li class="breadcrumb-item"><a href="https://ya.ru">Yandex</a></li>';
+echo '<li class="breadcrumb-item"><a href="another.php">Another</a></li>';
+ 
+
+// Текущий элемент
+echo "<li class='breadcrumb-item'><a class='active' class='link-success' href='".$current_page."'>"."Текущая вкладка: ".$current_page."</a></li>";
+echo '</nav>';
+?>
 
   <div class="my-3 p-3 bg-body rounded shadow-sm">
     <h6 class="border-bottom pb-2 mb-0">Гостевая книга</h6>
     <?php
         $vsego = $cl->pagination();
         $limit = 10;
-        if (isset($_GET['page'])){
+        if(empty($_GET['page'])){
+          $_GET['page']=1;
+        }
+        if(isset($_GET['page'])){
           $stranica = $_GET['page'];
           }
         else $stranica = 1;
-        $stranic = round($vsego/$limit);
+        if ($vsego%$limit<5 & $vsego%$limit!=0){
+          $stranic = round($vsego/$limit)+1;
+        }else{
+          $stranic = round($vsego/$limit);
+        }
         $nachalo = $stranica * $limit - $limit;
         echo '
         <nav aria-label="Page navigation example">
@@ -79,7 +117,6 @@ $cl = new database();
           }else{
             echo '<li class="page-item"><a class="page-link" href="?page='.$i.'">'.$i.'</a></li>';
         }
-        
         }
         echo '<li class="page-item">
                 <a class="page-link" href="?page='.$cl->plus($stranica,$stranic).'" aria-label="Next">
@@ -88,13 +125,12 @@ $cl = new database();
             </li>
           </ul>
         </nav>';
-
         $array = $cl->getdata($nachalo);
         foreach($array as $key=>$val){
               echo '<div class="d-flex text-body-secondary pt-3">';
               echo '<svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>';
               echo '<p class="pb-3 mb-0 small lh-sm border-bottom" style="width:100%;">';
-              echo '<strong class="d-block text-gray-dark">'.$val["mail"]."<text style='float:right;'>".$val['ip']."</text></strong>";
+              echo '<strong class="d-block text-gray-dark">'.$val['id'].". ".$val["mail"]."<text style='float:right;'>".$val['ip']."</text></strong>";
               echo '<br>';
               echo '<text>'.$val['text'].'</text>';
               echo '<strong class="d-block text-gray-dark" style="float:right;">'.$val["date"]."</strong>";
@@ -102,7 +138,7 @@ $cl = new database();
               echo '</div>';
         }
     ?>
-    
+
   </div>
 </main>
 <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
