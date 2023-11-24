@@ -1,4 +1,5 @@
 <?php
+session_start();
 include("main.php");
 $cl = new database();
 ?>
@@ -38,27 +39,38 @@ $cl = new database();
 <main class="container">
 <div class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm">
     <div class="lh-1">
-    <form method="post" action="add.php">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Почта</label>
-        <input type="email" name="mail" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        <input type="email" id="mail" name="mail" class="form-control" id="exampleInputEmail1" maxlength="40"  aria-describedby="emailHelp">
       </div>
       <div class="mb-3">
         <label for="text" class="form-label">Текст</label>
-        <textarea  name="text" class="form-control" id="text"></textarea>
+        <textarea  name="text" id="text" class="form-control" id="text" maxlength="40"></textarea>
       </div>
-        <input type="hidden" name="date" value="<?php echo date('Y-m-d'); ?>">
-        <input type="hidden" name="ip" value="<?php echo $_SERVER['REMOTE_ADDR'];?>">
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+      <button type="submit" id="add_button" class="btn btn-primary">Отправить</button>
+      <span id="mess"></span><br>
     <script>
+      $('#add_button').click(function(){
+        let mail = $('#mail').val();
+        let text = $('#text').val();
+        let date = $('#date').val();
+        let ip = $('#ip').val();
+
+        $.ajax({
+          type: "POST",
+          url: "http://localhost/zadanie/gk/main.php",
+          data: {mail: mail,text: text,date: date,ip: ip},
+          success: function(){
+            $('#mess').html("Сообщение отправлено");
+          }
+        });
+      });
       $("textarea").on('keyup', function (e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
           $('textarea').val($('textarea').val() + '<br>');
         }
       });
     </script>
-    
 </div>
 </div>
 
@@ -125,7 +137,7 @@ echo '</nav>';
             </li>
           </ul>
         </nav>';
-        $array = $cl->getdata($nachalo);
+        $array = $cl->getdata($nachalo,$limit);
         foreach($array as $key=>$val){
               echo '<div class="d-flex text-body-secondary pt-3">';
               echo '<svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>';
@@ -142,6 +154,5 @@ echo '</nav>';
   </div>
 </main>
 <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="offcanvas-navbar.js"></script></body>
+</body>
 </html>
