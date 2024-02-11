@@ -3,39 +3,40 @@ include("main.php");
 $cl = new main();
 ?>
 <style>
-.change button{
-    width:50%;
-}
-.change{
-    display:flex;
-    justify-content: space-between;
-}
-.select{
-    min-width:100px;
-}
-.setting{
-    display:flex;
-    flex-direction:column;
-}
-.settings{
-    display:flex;
-    flex-direction:row;
-    justify-content: center;
-}
-.main{
-    display:inline-block;
-    flex-direction:column;
-}
-section{
-    width:100%;
-    height:90vh;
-    justify-content: center;    
-    align-items:center;
-}
+    .change button{
+        width:50%;
+    }
+    .change{
+        display:flex;
+        justify-content: space-between;
+    }
+    .select{
+        min-width:100px;
+    }
+    .setting{
+        display:flex;
+        flex-direction:column;
+    }
+    .settings{
+        display:flex;
+        flex-direction:row;
+        justify-content: center;
+    }
+    .main{
+        display:inline-block;
+        flex-direction:column;
+    }
+    section{
+        width:100%;
+        height:90vh;
+        justify-content: center;    
+        align-items:center;
+    }
 </style>
 <script src="jquery-3.7.1.js"></script>
 <section>
 <div class="main">
+    <!-- настройки календаря (год,месяц) -->
     <div class="settings">
         <div class="setting">
             <div >
@@ -77,6 +78,7 @@ section{
 </div>
 </section>
 <script>
+    // кнопка меняющая месяц на предыдущий
     $("#month_minus").on("click",function(){
         let s = $("#month").val();
         if($("#month").val()==1){
@@ -87,6 +89,7 @@ section{
         $('#month option[value='+s+']').prop('selected', true);
         kalendar()
     });
+    // кнопка меняющая месяц на следующий
     $("#month_plus").on("click",function(){
         let s = $("#month").val();
         if($("#month").val()==12){
@@ -97,6 +100,7 @@ section{
         $('#month option[value='+s+']').prop('selected', true);
         kalendar();
     });
+    // кнопка меняющая год на предыдущий
     $("#year_minus").on("click",function(){
         let s = $("#year").val();
         if($("#year").val()==1970){
@@ -107,6 +111,7 @@ section{
         $('#year option[value='+s+']').prop('selected', true);
         kalendar()
     });
+    // кнопка меняющая год на следующий
     $("#year_plus").on("click",function(){
         let s = $("#year").val();
         if($("#year").val()==2030){
@@ -117,8 +122,10 @@ section{
         $('#year option[value='+s+']').prop('selected', true);
         kalendar();
     });
+    // запускает функцию при изменении настроек
     $('#year').on('change',kalendar());
     $('#month').on('change',kalendar());
+    // функция передачи данных 
     function kalendar(){
         let year = $('#year').val();
         let month = $('#month').val();
